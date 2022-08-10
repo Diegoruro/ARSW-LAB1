@@ -18,8 +18,6 @@ public class Main {
         List<Integer> blackListOcurrences=hblv.checkHost("200.24.34.55", 5);
         System.out.println("The host was found in the following blacklists:"+blackListOcurrences);
 
-        HostBlackListsThread thread = new HostBlackListsThread("200.24.34.55");
-        thread.run();
         
     }
     

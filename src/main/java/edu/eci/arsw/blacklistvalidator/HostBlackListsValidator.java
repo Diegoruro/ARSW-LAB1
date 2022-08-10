@@ -32,28 +32,32 @@ public class HostBlackListsValidator {
     public List<Integer> checkHost(String ipaddress, int N){
 
         LinkedList<HostBlackListsThread> threads = new LinkedList<HostBlackListsThread>();
-        for (int i = 0; i < N; i++) {
-            threads.add(new HostBlackListsThread(ipaddress));
-        }
-        
-        LinkedList<Integer> blackListOcurrences=new LinkedList<>();
-        
-        int ocurrencesCount=0;
-        
         HostBlacklistsDataSourceFacade skds=HostBlacklistsDataSourceFacade.getInstance();
-        
+        int ocurrencesCount=0;
         int checkedListsCount=0;
+        LinkedList<Integer> blackListOcurrences=new LinkedList<>();
 
-        int servers = skds.getRegisteredServersCount();
-        
-        for (int i=0;i<skds.getRegisteredServersCount() && ocurrencesCount<BLACK_LIST_ALARM_COUNT;i++){
-            checkedListsCount++;
-            
-            if (skds.isInBlackListServer(i, ipaddress)){
-                
-                blackListOcurrences.add(i);
-                
-                ocurrencesCount++;
+        int fraction = 0;
+        if(N % 2 != 0){
+            fraction = (skds.getRegisteredServersCount()- (skds.getRegisteredServersCount()%N)) / N;
+        }
+        else{
+            fraction = (skds.getRegisteredServersCount() / N);
+        }
+        for(int i=0; i<N; i++){
+            int from = fraction*i;
+            int to = fraction*(i+1);
+            threads.add(new HostBlackListsThread(ipaddress,ocurrencesCount,checkedListsCount,from,to,skds));
+        }
+
+        threads.forEach((thread)-> thread.start());
+
+        for (HostBlackListsThread thread: threads) {
+            try {
+                thread.join();
+                thread.getServers().forEach(server-> blackListOcurrences.add(server));
+            }catch (Exception e){
+                LOG.info(e.getMessage());
             }
         }
         
