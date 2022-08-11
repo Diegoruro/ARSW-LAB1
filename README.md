@@ -1,4 +1,5 @@
-
+#Laboratorio 1 ARSW
+## Juan Aguas - Diego Ruiz
 ### Escuela Colombiana de Ingeniería
 ### Arquitecturas de Software - ARSW
 ## Ejercicio Introducción al paralelismo - Hilos - Caso BlackListSearch
@@ -21,6 +22,8 @@
 	2. Inicie los tres hilos con 'start()'.
 	3. Ejecute y revise la salida por pantalla. 
 	4. Cambie el incio con 'start()' por 'run()'. Cómo cambia la salida?, por qué?.
+	- Al utilizar el método start en los hilos estos crean una nueva instancia y luego ejecutan el método run, por esta razón al ver el resultado en pantalla los números no se imprimen en orden.
+	-  Al usar el método run directamente podemos ver que se ejecuta para cada hilo en el orden dado en el código por lo cual los números se imprimen de manera correcta.
 
 **Parte II - Ejercicio Black List Search**
 
